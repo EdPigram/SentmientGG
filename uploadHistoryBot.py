@@ -25,7 +25,7 @@ async def on_ready():
                 data = {"messageID": message.id, 
                         "channelID": channel.id, 
                         "secondsSinceEpoch": int((message.created_at - datetime.datetime.utcfromtimestamp(0)).total_seconds()),
-                        "author": message.author.name}
+                        "authorID": message.author.id}
                 print(data)
                 response = requests.post("http://localhost:8080/messages/add", data)
                 if response.status_code != 200:

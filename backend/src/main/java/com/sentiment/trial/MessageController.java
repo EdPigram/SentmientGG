@@ -19,13 +19,13 @@ public class MessageController {
     public @ResponseBody String addNewMessage(@RequestParam String messageID,
                                               @RequestParam String channelID,
                                               @RequestParam String secondsSinceEpoch,
-                                              @RequestParam String author) {
+                                              @RequestParam String authorID) {
         Message n = new Message();
 
         n.setMessageID(Long.parseLong(messageID));
         n.setChannelID(Long.parseLong(channelID));
         n.setSecondsSinceEpoch(Long.parseLong(secondsSinceEpoch));
-        n.setAuthor(author);
+        n.setAuthor(Long.parseLong(authorID));
         messageRepository.save(n);
         return "Saved";
     }

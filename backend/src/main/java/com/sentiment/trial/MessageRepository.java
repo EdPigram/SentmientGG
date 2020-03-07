@@ -13,7 +13,7 @@ import java.util.List;
 public interface MessageRepository extends CrudRepository<Message, Integer> {
 
     @Query(value = "select m from Message m where m.channelID = ?1")
-    Message allMessagesFrom(Long channelID);
+    Iterable<Message> allMessagesFrom(Long channelID);
 
     @Query(value = "select m from Message m where m.channelID = ?1 and m.secondsSinceEpoch = " +
                             "(select MAX(secondsSinceEpoch) from Message where channelID = ?1)")

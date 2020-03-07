@@ -17,7 +17,7 @@ public class Message {
 
     private Long secondsSinceEpoch;
 
-    private String author;
+    private Long authorID;
 
     // setters and getters (need getters for api to return the corresponding values)
 
@@ -41,16 +41,20 @@ public class Message {
         return secondsSinceEpoch;
     }
 
+    Integer getDaysSinceEpoch() {
+        return Math.toIntExact(secondsSinceEpoch/60/60/24);
+    }
+
     void setSecondsSinceEpoch(Long secondsSinceEpoch) {
         this.secondsSinceEpoch = secondsSinceEpoch;
     }
 
-    void setAuthor(String author) {
-        this.author = author;
+    void setAuthor(Long authorID) {
+        this.authorID = authorID;
     }
 
-    public String getAuthor() {
-        return author;
+    Long getAuthor() {
+        return authorID;
     }
 
 }
