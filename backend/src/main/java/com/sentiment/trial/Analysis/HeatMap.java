@@ -1,22 +1,12 @@
 package com.sentiment.trial.Analysis;
 
-import java.util.ArrayList;
-
 public class HeatMap {
 
-    public ArrayList<Integer> interactions;
-    public Integer earliestDay;
-    public Integer numberOfDays;
-    public boolean uniqueAuthor;
-    public boolean postsIncluded;
-    public boolean reactionsIncluded;
+    public double[][] cells;
     public boolean valid;
 
-    public HeatMap(Integer earliestDay, Integer latestDay, boolean uniqueAuthor, boolean valid) {
-        this.uniqueAuthor = uniqueAuthor;
-        this.earliestDay = earliestDay;
-        this.numberOfDays = latestDay - earliestDay + 1;
-        this.interactions = new ArrayList<Integer>(this.numberOfDays);
+    public HeatMap(boolean valid) {
+        this.cells = new double[7][24];
         this.valid = valid;
     }
 

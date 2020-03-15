@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 
 @Controller
@@ -20,7 +21,7 @@ public class AnalysisController {
     private MessageRepository messageRepository;
 
     @GetMapping(path="/interactionHistory")
-    public @ResponseBody InteractionHistory addNewMessage(@RequestParam String channelID) {
+    public @ResponseBody InteractionHistory ih(@RequestParam String channelID) {
 
         Iterable<Message> messages = messageRepository.allMessagesFrom(Long.parseLong(channelID));
 
@@ -45,6 +46,29 @@ public class AnalysisController {
         // now return an array containing the number of authors in each day
         InteractionHistory response = new InteractionHistory(earliestDay, latestDay, true, true);
         for (int i=0; i<numDays; i++) response.interactions.add(counts.get(i).size());
+
+        return response;
+    }
+
+    @GetMapping(path="/messageHeatMap")
+    public @ResponseBody HeatMap mhm(@RequestParam String channelID) {
+
+        HeatMap response = new HeatMap(true);
+
+        Iterable<Message> messages = messageRepository.allMessagesFrom(Long.parseLong(channelID));
+
+        Double increment = 1.0 / ((Collection<Message>)messages).size();
+
+        for (Message m : messages) {
+
+            // epoch was a thursday, so + 4 % 7 is the days past Saturday
+            int day = (m.getDaysSinceEpoch() + 4) % 7;
+            int hour = (int)((m.getSecondsSinceEpoch()/60/60) % 24);
+            System.out.println(day);
+            System.out.println(hour);
+            response.cells[day][hour] += increment;
+
+        }
 
         return response;
     }
