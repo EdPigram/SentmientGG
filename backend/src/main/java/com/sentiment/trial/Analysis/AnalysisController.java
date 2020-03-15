@@ -1,5 +1,7 @@
-package com.sentiment.trial;
+package com.sentiment.trial.Analysis;
 
+import com.sentiment.trial.ingestion.Message;
+import com.sentiment.trial.ingestion.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,11 +11,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Set;
 
 @Controller
-@RequestMapping(path="/data")
-public class DataController {
+@RequestMapping(path="/analysis")
+public class AnalysisController {
 
     @Autowired
     private MessageRepository messageRepository;
@@ -26,11 +27,11 @@ public class DataController {
         // get the time bounds to decide how many arrays I need
         int earliestDay = Integer.MAX_VALUE, latestDay = 0;
         for (Message m : messages) {
-            if (m.getDaysSinceEpoch() > latestDay) latestDay = m.getDaysSinceEpoch();
+            if (m.getDaysSinceEpoch() > latestDay)   latestDay   = m.getDaysSinceEpoch();
             if (m.getDaysSinceEpoch() < earliestDay) earliestDay = m.getDaysSinceEpoch();
         }
 
-        if (earliestDay > latestDay) return new InteractionHistory(0, 0, true, false);
+        if (earliestDay >  latestDay) return new InteractionHistory(0, 0, true, false);
 
         int numDays = latestDay - earliestDay + 1;
 
@@ -39,7 +40,7 @@ public class DataController {
         for (int i=0; i<numDays; i++) counts.add(new HashSet<Long>());
 
         // Now go through, and add the message author id to the set for the corresponding day
-        for (Message m : messages) counts.get(m.getDaysSinceEpoch() - earliestDay).add(m.getAuthor());
+        for (Message m : messages) counts.get(m.getDaysSinceEpoch() - earliestDay).add(m.getAuthorID());
 
         // now return an array containing the number of authors in each day
         InteractionHistory response = new InteractionHistory(earliestDay, latestDay, true, true);
@@ -48,8 +49,5 @@ public class DataController {
         return response;
     }
 
-    @GetMapping(path="/all")
-    public @ResponseBody Iterable<Message> getAllMessages() {
-        return messageRepository.findAll();
-    }
+
 }

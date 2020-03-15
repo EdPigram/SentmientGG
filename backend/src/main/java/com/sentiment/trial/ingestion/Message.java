@@ -1,9 +1,10 @@
-package com.sentiment.trial;
+package com.sentiment.trial.ingestion;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class Message {
@@ -11,12 +12,16 @@ public class Message {
     // values
 
     @Id
+    @NotNull
     private Long messageID;
 
+    @NotNull
     private Long channelID;
 
+    @NotNull
     private Long secondsSinceEpoch;
 
+    @NotNull
     private Long authorID;
 
     // setters and getters (need getters for api to return the corresponding values)
@@ -41,7 +46,7 @@ public class Message {
         return secondsSinceEpoch;
     }
 
-    Integer getDaysSinceEpoch() {
+    public Integer getDaysSinceEpoch() {
         return Math.toIntExact(secondsSinceEpoch/60/60/24);
     }
 
@@ -49,11 +54,11 @@ public class Message {
         this.secondsSinceEpoch = secondsSinceEpoch;
     }
 
-    void setAuthor(Long authorID) {
+    public void setAuthorID(Long authorID) {
         this.authorID = authorID;
     }
 
-    Long getAuthor() {
+    public Long getAuthorID() {
         return authorID;
     }
 

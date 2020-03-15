@@ -21,15 +21,21 @@ async def on_ready():
 
     for channel in client.get_all_channels():
         if str(channel.type) == "text":
+            data = []
             async for message in channel.history(limit=200):
-                data = {"messageID": message.id, 
-                        "channelID": channel.id, 
-                        "secondsSinceEpoch": int((message.created_at - datetime.datetime.utcfromtimestamp(0)).total_seconds()),
-                        "authorID": message.author.id}
-                print(data)
-                response = requests.post("http://localhost:8080/messages/add", data)
-                if response.status_code != 200:
-                    print(response.status_code, response.text)
+                data.append({"messageID": message.id, 
+                                    "channelID": channel.id, 
+                                    "secondsSinceEpoch": int((message.created_at - datetime.datetime.utcfromtimestamp(0)).total_seconds()),
+                                    "authorID": message.author.id})
+                       
+                # data = {"messageID": message.id, 
+                #         "channelID": channel.id, 
+                #         "secondsSinceEpoch": int((message.created_at - datetime.datetime.utcfromtimestamp(0)).total_seconds()),
+                #         "authorID": message.author.id}
+            print(data)
+            response = requests.post("http://localhost:8080/ingestion/uploadMessages", json=data)
+            if response.status_code != 200:
+                print(response.status_code, response.text)
     
     print("messages Extracted")
     await client.close()
