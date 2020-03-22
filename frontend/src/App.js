@@ -1,11 +1,11 @@
 import React from 'react';
 // import HeaderAppBar from './header/HeaderBar.js'
-import AreaChart from './areaChart.js';
+import DaysSinceAreaChart from './daysSinceAreaChart.js';
 
 function App() {
   return (
     <div className="App">
-      <AreaChart />
+      <DaysSinceAreaChart />
       {/* <HeaderAppBar/> */}
     </div>
   );

@@ -1,7 +1,7 @@
 import React from 'react'
 import {Line} from "react-chartjs-2";
 
-export default class AreaChart extends React.Component {
+export default class DaysSinceAreaChart extends React.Component {
 
   chartRef = React.createRef();
 
@@ -22,12 +22,15 @@ export default class AreaChart extends React.Component {
   }
 
   componentDidMount() {
-    fetch("http://localhost:8080/analysis/daysSinceEngagement?channelID=0")
+    fetch("http://localhost:8080/analysis/daysSinceEngagement?channelID=59123458")
       .then(res => res.json())
       .then(
         (result) => {
 
           if (result.interactions.length == 0) return;
+
+          // reverse so that the least interactions are on the bottom
+          result.interactions.reverse();
 
           let data = {};
 
@@ -40,11 +43,14 @@ export default class AreaChart extends React.Component {
 
           for (let [index, interaction] of result.interactions.entries()) {
 
-            console.log(index)
+            let daysSince = result.interactions.length - index
 
-            datasets[index].label = `${index}`;
-            datasets[index].backgroundColor = `rgba(${120+index*4}, 100, ${240-index*4}, 0.5)`
+            datasets[index].label = `${daysSince}`;
+            datasets[index].backgroundColor = `rgba(${120+daysSince*4}, ${240-daysSince*4}, 120, 0.5)`
             datasets[index].data = interaction;
+            datasets[index].borderWidth = 0.5
+            datasets[index].lineTension = 0;
+            datasets[index].pointRadius = 0;
 
             if (index === 0) {
               datasets[index].fill = 'origin'
