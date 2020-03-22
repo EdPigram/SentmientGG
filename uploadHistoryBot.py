@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
 
-response = requests.get("http://api.open-notify.org/this-api-doesnt-exist")
+# response = requests.get("http://api.open-notify.org/this-api-doesnt-exist")
 
 client = discord.Client()
 @client.event
@@ -24,14 +24,10 @@ async def on_ready():
             data = []
             async for message in channel.history(limit=200):
                 data.append({"messageID": message.id, 
-                                    "channelID": channel.id, 
-                                    "secondsSinceEpoch": int((message.created_at - datetime.datetime.utcfromtimestamp(0)).total_seconds()),
-                                    "authorID": message.author.id})
-                       
-                # data = {"messageID": message.id, 
-                #         "channelID": channel.id, 
-                #         "secondsSinceEpoch": int((message.created_at - datetime.datetime.utcfromtimestamp(0)).total_seconds()),
-                #         "authorID": message.author.id}
+                            "channelID": channel.id, 
+                            "secondsSinceEpoch": int((message.created_at - datetime.datetime.utcfromtimestamp(0)).total_seconds()),
+                            "authorID": message.author.id})
+                            
             print(data)
             response = requests.post("http://localhost:8080/ingestion/uploadMessages", json=data)
             if response.status_code != 200:

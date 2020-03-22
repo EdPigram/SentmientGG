@@ -18,9 +18,7 @@ public class MessageController {
 
     @PostMapping(path="/uploadMessages", consumes = "application/json")
     public @ResponseBody String addMessages(@RequestBody List<Message> messages) {
-        for (Message m : messages) {
-            messageRepository.save(m);
-        }
+        for (Message m : messages) messageRepository.save(m);
         return "Saved succesfully.";
     }
 

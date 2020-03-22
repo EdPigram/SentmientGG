@@ -4,16 +4,12 @@ import com.sentiment.trial.ingestion.Message;
 import com.sentiment.trial.ingestion.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.*;
 
 @Controller
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping(path="/analysis")
 public class AnalysisController {
 
@@ -32,7 +28,7 @@ public class AnalysisController {
             if (m.getDaysSinceEpoch() < earliestDay) earliestDay = m.getDaysSinceEpoch();
         }
 
-        if (earliestDay >  latestDay) return new InteractionHistory(0, 0, true, false);
+        if (earliestDay > latestDay) return new InteractionHistory(0, 0, true, false);
 
         int numDays = latestDay - earliestDay + 1;
 
@@ -61,7 +57,7 @@ public class AnalysisController {
 
         for (Message m : messages) {
 
-            // epoch was a thursday, so + 4 % 7 is the days past Saturday
+            // epoch was a thursday, so + 4 % 7 is the days past Sunday
             int day = (m.getDaysSinceEpoch() + 4) % 7;
             int hour = (int)((m.getSecondsSinceEpoch()/60/60) % 24);
             System.out.println(day);
@@ -69,6 +65,40 @@ public class AnalysisController {
             response.cells[day][hour] += increment;
 
         }
+
+        return response;
+    }
+
+    @GetMapping(path="/engagementHistory")
+    public @ResponseBody EngagementHistory eh(@RequestParam String channelID) {
+
+        // get all the messages
+        Iterable<Message> iterableMessages = messageRepository.allMessagesFrom(Long.parseLong(channelID));
+        ArrayList<Message> messages = new ArrayList<Message>();
+        for (Message m : iterableMessages) messages.add(m);
+
+        // Initialise the response
+        EngagementHistory response = new EngagementHistory(10, 20, true, true);
+
+        // build it
+        response.calculate(messages);
+
+        return response;
+    }
+
+    @GetMapping(path="/daysSinceEngagement")
+    public @ResponseBody DaysSinceEngagement idk(@RequestParam String channelID) {
+
+        // get all the messages
+        Iterable<Message> iterableMessages = messageRepository.allMessagesFrom(Long.parseLong(channelID));
+        ArrayList<Message> messages = new ArrayList<Message>();
+        for (Message m : iterableMessages) messages.add(m);
+
+        // Initialise the response
+        DaysSinceEngagement response = new DaysSinceEngagement(0, 50, true, true);
+
+        // build it
+        response.calculate(messages);
 
         return response;
     }

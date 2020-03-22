@@ -8,7 +8,6 @@ public class InteractionHistory{
     public Integer earliestDay;
     public Integer numberOfDays;
     public boolean uniqueAuthor;
-    public boolean postsIncluded;
     public boolean reactionsIncluded;
     public boolean valid;
 
@@ -17,6 +16,7 @@ public class InteractionHistory{
         this.earliestDay = earliestDay;
         this.numberOfDays = latestDay - earliestDay + 1;
         this.interactions = new ArrayList<Integer>(this.numberOfDays);
+        this.reactionsIncluded = false;
         this.valid = valid;
     }
 
