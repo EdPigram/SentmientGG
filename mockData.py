@@ -10,7 +10,8 @@ days = 60*60*24
 
 channels = [{'id': 0, 'descr': "1 person twice a day, 1 person every 2 days for 100. 1 person once a day for 10 days"},
             {'id': 10000, 'descr': "20 people, starting staggered by 2 days, posting for 10-20 days, then dormant"},
-            {'id': 59123458, 'descr': "30 people, posting 1-5 times, between day 1 and 50"},
+            {'id': 59123458, 'descr': "30 people, posting 1-4 times between day 1 and 50." +
+                                      "Plus, a spike of posts 1-10 days after day 20"},
             {'id': 53951209533, 'descr': ""}]
 
 
@@ -40,11 +41,17 @@ for p in range(30):
                     "authorID": p})
 
 # --------- Third ---------
-for author in range(50):
-    for num_messages in range(random.randint(1, 4)):
+for author in range(30):
+    for num_messages in range(random.randint(1, 20)):
         data.append({"messageID": random.randint(0, 10000000), 
                     "channelID": channels[2]["id"], 
                     "secondsSinceEpoch": random.randint(1, 50)*days,
+                    "authorID": author})
+for author in range(15):
+    for num_messages in range(random.randint(4, 8)):
+        data.append({"messageID": random.randint(0, 10000000), 
+                    "channelID": channels[2]["id"], 
+                    "secondsSinceEpoch": random.randint(1, 10)*days + 20*days,
                     "authorID": author})
 
 # Send the data

@@ -28,14 +28,12 @@ public class DaysSinceEngagement {
     public int[][] interactions;
     public Integer earliestDay;
     public Integer numberOfDays;
-    public boolean uniqueAuthor;
     public boolean reactionsIncluded;
     public boolean valid;
 
     private static final int daysHistory = 31;
 
-    public DaysSinceEngagement(Integer earliestDay, Integer latestDay, boolean uniqueAuthor, boolean valid) {
-        this.uniqueAuthor = uniqueAuthor;
+    public DaysSinceEngagement(Integer earliestDay, Integer latestDay, boolean valid) {
         this.earliestDay = earliestDay;
         this.numberOfDays = latestDay - earliestDay + 1;
 
@@ -49,8 +47,7 @@ public class DaysSinceEngagement {
     public void calculate(ArrayList<Message> messages) {
 
         // Spill the dates into each person. This could be divided and done in parallel
-        HashMap<Long, Person> byPerson = new HashMap<Long, Person>();
-        HashMap<Long, Integer> earliestPost = new HashMap<Long, Integer>();
+        HashMap<Long, Person> byPerson = new HashMap<>();
 
         for (Message m : messages) {
 

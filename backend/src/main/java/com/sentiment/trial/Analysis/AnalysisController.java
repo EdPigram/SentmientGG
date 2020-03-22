@@ -16,36 +16,6 @@ public class AnalysisController {
     @Autowired
     private MessageRepository messageRepository;
 
-    @GetMapping(path="/interactionHistory")
-    public @ResponseBody InteractionHistory ih(@RequestParam String channelID) {
-
-        Iterable<Message> messages = messageRepository.allMessagesFrom(Long.parseLong(channelID));
-
-        // get the time bounds to decide how many arrays I need
-        int earliestDay = Integer.MAX_VALUE, latestDay = 0;
-        for (Message m : messages) {
-            if (m.getDaysSinceEpoch() > latestDay)   latestDay   = m.getDaysSinceEpoch();
-            if (m.getDaysSinceEpoch() < earliestDay) earliestDay = m.getDaysSinceEpoch();
-        }
-
-        if (earliestDay > latestDay) return new InteractionHistory(0, 0, true, false);
-
-        int numDays = latestDay - earliestDay + 1;
-
-        // initialize the array of sets
-        ArrayList<HashSet<Long>> counts = new ArrayList<HashSet<Long>>(numDays);
-        for (int i=0; i<numDays; i++) counts.add(new HashSet<Long>());
-
-        // Now go through, and add the message author id to the set for the corresponding day
-        for (Message m : messages) counts.get(m.getDaysSinceEpoch() - earliestDay).add(m.getAuthorID());
-
-        // now return an array containing the number of authors in each day
-        InteractionHistory response = new InteractionHistory(earliestDay, latestDay, true, true);
-        for (int i=0; i<numDays; i++) response.interactions.add(counts.get(i).size());
-
-        return response;
-    }
-
     @GetMapping(path="/messageHeatMap")
     public @ResponseBody HeatMap mhm(@RequestParam String channelID) {
 
@@ -69,8 +39,8 @@ public class AnalysisController {
         return response;
     }
 
-    @GetMapping(path="/engagementHistory")
-    public @ResponseBody EngagementHistory eh(@RequestParam String channelID) {
+    @GetMapping(path="/interactionHistory")
+    public @ResponseBody InteractionHistory eh(@RequestParam String channelID) {
 
         // get all the messages
         Iterable<Message> iterableMessages = messageRepository.allMessagesFrom(Long.parseLong(channelID));
@@ -78,7 +48,7 @@ public class AnalysisController {
         for (Message m : iterableMessages) messages.add(m);
 
         // Initialise the response
-        EngagementHistory response = new EngagementHistory(10, 20, true, true);
+        InteractionHistory response = new InteractionHistory(0, 50, true);
 
         // build it
         response.calculate(messages);
@@ -86,22 +56,22 @@ public class AnalysisController {
         return response;
     }
 
-    @GetMapping(path="/daysSinceEngagement")
-    public @ResponseBody DaysSinceEngagement idk(@RequestParam String channelID) {
-
-        // get all the messages
-        Iterable<Message> iterableMessages = messageRepository.allMessagesFrom(Long.parseLong(channelID));
-        ArrayList<Message> messages = new ArrayList<Message>();
-        for (Message m : iterableMessages) messages.add(m);
-
-        // Initialise the response
-        DaysSinceEngagement response = new DaysSinceEngagement(0, 50, true, true);
-
-        // build it
-        response.calculate(messages);
-
-        return response;
-    }
+//    @GetMapping(path="/daysSinceEngagement")
+//    public @ResponseBody DaysSinceEngagement idk(@RequestParam String channelID) {
+//
+//        // get all the messages
+//        Iterable<Message> iterableMessages = messageRepository.allMessagesFrom(Long.parseLong(channelID));
+//        ArrayList<Message> messages = new ArrayList<Message>();
+//        for (Message m : iterableMessages) messages.add(m);
+//
+//        // Initialise the response
+//        DaysSinceEngagement response = new DaysSinceEngagement(0, 50, true);
+//
+//        // build it
+//        response.calculate(messages);
+//
+//        return response;
+//    }
 
 
 }
