@@ -10,6 +10,7 @@ import java.util.*;
 
 @Controller
 @CrossOrigin(origins = "http://localhost:3000")
+
 @RequestMapping(path="/analysis")
 public class AnalysisController {
 
