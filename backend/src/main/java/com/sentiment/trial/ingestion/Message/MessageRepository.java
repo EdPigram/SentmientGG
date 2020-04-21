@@ -1,4 +1,4 @@
-package com.sentiment.trial.ingestion;
+package com.sentiment.trial.ingestion.Message;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;

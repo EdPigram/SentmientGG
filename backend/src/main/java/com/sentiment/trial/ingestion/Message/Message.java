@@ -1,4 +1,4 @@
-package com.sentiment.trial.ingestion;
+package com.sentiment.trial.ingestion.Message;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

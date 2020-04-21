@@ -1,8 +1,10 @@
-package com.sentiment.trial.ingestion;
+package com.sentiment.trial.ingestion.Message;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import com.sentiment.trial.ingestion.Message.MessageRepository;
 
 import java.util.List;
 

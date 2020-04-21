@@ -1,9 +1,9 @@
 package com.sentiment.trial.Analysis;
 
-import com.sentiment.trial.ingestion.Message;
-
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import com.sentiment.trial.ingestion.Message.Message;
 
 import static java.lang.Integer.min;
 
