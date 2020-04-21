@@ -46,12 +46,15 @@ public class InteractionHistory {
 
     public void calculate(ArrayList<Message> messages) {
 
+        // todo: include reactions
+        // todo: get earliest interaction date from centralised table?
 
         // Spill the dates into each person
         HashMap<Long, Person> byPerson = new HashMap<>();
 
         for (Message m : messages) {
 
+            // todo: account for timezone
             int day = m.getDaysSinceEpoch() - earliestDay;
 
             if (!byPerson.containsKey(m.getAuthorID())) byPerson.put(m.getAuthorID(), new Person(day));
@@ -64,6 +67,8 @@ public class InteractionHistory {
 
             // build up a set of which days were interacted over (to make a sliding window easier)
             int[] interactionSet = new int[numberOfDays + window];
+
+            // todo: mirror the final days when past the final date
 
             for (int day : person.days) {
                 if (day < 0 || day >= numberOfDays + window) continue;
@@ -82,7 +87,6 @@ public class InteractionHistory {
                 if (person.earliestDay < i) {
                     int bucket = bounds.length - 1;
                     while (bucket > 0 && rollingSum >= bounds[bucket - 1]) bucket--;
-//                    System.out.printf("%d, %d \n", rollingSum, bucket);
                     interactions[bucket][i]++;
                 }
 
